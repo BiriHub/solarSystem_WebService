@@ -61,8 +61,6 @@ public class SolarSystem extends HttpServlet {
                         return ;
                     }
                 }
-                xmlResponse = "<body>" + xmlResponse + "</body>";
-
                 response.setStatus(200);
                 PrintWriter printResponse = response.getWriter();
                 printResponse.write(xmlResponse);

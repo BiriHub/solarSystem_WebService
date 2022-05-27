@@ -5,8 +5,14 @@ package com.example.solarsystem_webservice;
 
 import org.json.JSONObject;
 import org.json.XML;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 import javax.net.ssl.HttpsURLConnection;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -21,6 +27,23 @@ public class RequestHandler {
 
     //second get
     public static final String bodyType_URL = "https://api.le-systeme-solaire.net/rest.php/bodies?filter[]=bodyType,eq,";
+
+    //create a document from an 'InputStream'
+    private static Element getDocument(InputStream request) {
+        // parsing dell'xml ricevuto con il metodo POST
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = null;
+        Document document = null;
+        try {
+            builder = factory.newDocumentBuilder();
+            //Salvo l'xml inviato dal client
+            document = builder.parse(request);
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            e.printStackTrace();
+        }
+        return document.getDocumentElement();
+
+    }
 
     public static String getInfo(URL urlRequest) {
 
@@ -68,17 +91,29 @@ public class RequestHandler {
 
             if ((line = input.readLine()) != null) {
                 JSONObject json = new JSONObject(line);
-                xmlResponse = XML.toString(json);
+                xmlResponse = XML.toString(json,"body");
             }
+
+
+
+            // XML parsing
+            Element root = getDocument(service.getInputStream());
+
+
+            // TODO: 27/05/2022 end xml parsing in order to follow Web API documentatio (It's also needed for 'getBodyType' method)
+            // TODO: 27/05/2022 check if 'toXMLString' method od 'Body' class works 
+            // TODO: 27/05/2022 start to build up the android application 
+            
+
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+
+
         return xmlResponse;
     }
-
-
 
     public static String getBodyType(URL urlRequest) {
 
