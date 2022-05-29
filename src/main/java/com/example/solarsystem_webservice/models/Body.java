@@ -1,18 +1,17 @@
 package com.example.solarsystem_webservice.models;
 
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Body {
     private final String name;
-    private final String mass;          // mass kg * 10^n
-    private final String volume;         // volume kg^3 * 10^n
-    private final float density;        // density in g/cm^3.
-    private final float gravity;        // surface gravity in m/s^2.
-    private final String bodyType;      // body type
-    private final float orbitPeriod;
-    private HashMap<String, String> moons;     // moons -> List of all moons : moonUrl -> url used to request data about the moon
+    private final String mass;                  // mass kg * 10^n
+    private final String volume;                // volume kg^3 * 10^n
+    private final float density;                // density in g/cm^3.
+    private final float gravity;                // surface gravity in m/s^2.
+    private final String bodyType;              // body type
+    private final float orbitPeriod;            // Sideral orbital time for body around another one (the Sun or a planet) in earth day.
+    private HashMap<String, String> moons;      // moons -> List of all moons : moonUrl -> url used to request data about the moon
 
 
     public Body(String name, String mass, String volume, float density, float gravity, String bodyType, float orbitPeriod, HashMap<String, String> moons) {
@@ -111,7 +110,3 @@ public class Body {
         }
     }
 }
-/*
-
-/
- */
