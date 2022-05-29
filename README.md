@@ -2,18 +2,18 @@
 **It is a web service use to realize a personalized interface towards another web service used to get open date about planets in solar system
 Just a _school project_**
 
-#WEB API
-##Data source : [https://api.le-systeme-solaire.net/en/](https://api.le-systeme-solaire.net/en/)
-##1. Return of information of a body given its name
+# WEB API
+## Data source : [https://api.le-systeme-solaire.net/en/](https://api.le-systeme-solaire.net/en/)
+## 1. Return of information of a body given its name
 
-   * ####Method : GET
-   * ####Request :
+   * #### Method : GET
+   * #### Request :
      - URL -> http://.../solarsystem/body?id=...
      
    * Response:
      - Status code : `200`
  
-     ###Body :
+     ### Body :
 ```xml
    <body>
       <name>...</name>
@@ -30,7 +30,7 @@ Just a _school project_**
    </body>    
 ```
 
-###Example :
+### Example :
 
 * ### URL -> http://.../solarsystem/body?id=Lempo
 ```xml
@@ -57,14 +57,14 @@ Just a _school project_**
    * Errors:
      * **Status code** : `400`  and error description
    -----
-##2. List of bodies of a specific body type
- * ####Method : GET
- * ####Request :
+## 2. List of bodies of a specific body type
+ * #### Method : GET
+ * #### Request :
    - URL -> http://.../solarsystem/list?type=...
 
-   * ####Response:
+   * #### Response:
      - Status code : `200`
-   ###Body :
+   ### Body :
 ```xml
 <bodies>
     <bodyType>...</bodyType>
@@ -88,7 +88,7 @@ Just a _school project_**
 </bodies>
 ```
 
-###Example :
+### Example :
 
 * ### URL -> http://.../solarsystem/list?type=asteroid
 ```xml
