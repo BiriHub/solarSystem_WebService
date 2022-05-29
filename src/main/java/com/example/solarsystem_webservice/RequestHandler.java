@@ -19,7 +19,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.HashMap;
 
 public class RequestHandler {
@@ -51,6 +50,7 @@ public class RequestHandler {
         return document.getDocumentElement();
 
     }
+
     // TODO: 28/05/2022 it works
     public static String getInfo(URL urlRequest) {
 
@@ -134,7 +134,6 @@ public class RequestHandler {
             }
 
             xmlResponse = newBody.toXml();
-            System.out.println(newBody.toXml());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -183,46 +182,64 @@ public class RequestHandler {
                 return null;
             }
 
+
+
             String line;
             BufferedReader input = new BufferedReader(new InputStreamReader(service.getInputStream(), "UTF-8"));
+            // check if body response is not null
             if ((line = input.readLine()) != null) {
+
+                //creates a 'JSON' object from json response
                 JSONObject json = new JSONObject(line);
-                xmlResponse = new StringBuilder(XML.toString(json, "body")); //establish the root
+                // creates the corresponding xml response from the json one
+                xmlResponse = new StringBuilder(XML.toString(json, "body"));
             }
 
             // XML parsing
+            //creates DOM tree from string
             Element root = getDocument(xmlResponse.toString());
 
-
-            // TODO: 28/05/2022  Cannot invoke "org.w3c.dom.Node.getFirstChild()" because the return value of "org.w3c.dom.NodeList.item(int)" is null
-            // TODO: 28/05/2022  //risolvi il problema
-            // TODO: 27/05/2022 start to build up the android application
-
-
+            // saves body type
             String bodyType = root.getElementsByTagName("bodyType").item(0).getFirstChild().getNodeValue();
+
+            //formatting xml response string
             xmlResponse = new StringBuilder("<bodies>\n<bodyType>" + bodyType + "</bodyType>\n");
 
-
+            //creates a node list of all bodies contained in DOM tree
             NodeList bodies = root.getElementsByTagName("bodies");
-
-
             HashMap<String, String> moons;
             Body newBody;
 
             for (int i = 0; i < bodies.getLength(); i++) {
+                Element body = (Element) bodies.item(i);
 
-                String name = root.getElementsByTagName("name").item(i).getFirstChild().getNodeValue();
-                String mass = "" + root.getElementsByTagName("massValue").item(i).getFirstChild().getNodeValue() + "10^" + root.getElementsByTagName("massExponent").item(i).getFirstChild().getNodeValue();
-                String vol = "" + root.getElementsByTagName("volValue").item(i).getFirstChild().getNodeValue() + "10^" + root.getElementsByTagName("volExponent").item(i).getFirstChild().getNodeValue();
-                float density = Float.parseFloat(root.getElementsByTagName("density").item(i).getFirstChild().getNodeValue());
-                float gravity = Float.parseFloat(root.getElementsByTagName("gravity").item(i).getFirstChild().getNodeValue());
-                float orbitPeriod = Float.parseFloat(root.getElementsByTagName("sideralOrbit").item(i).getFirstChild().getNodeValue());
-                String moon = root.getElementsByTagName("moon").item(i).getFirstChild().getNodeValue();
+                String name = body.getElementsByTagName("name").item(0).getFirstChild().getNodeValue();
+                String mass,vol;
 
-                if (!(moon == null)) {
+                //check if mass exists
+                String checkMass= body.getElementsByTagName("mass").item(0).getFirstChild().getNodeValue();
+                if (!(checkMass==null)) {
+                    mass ="null";
+                }else{
+                     mass= "" + body.getElementsByTagName("massValue").item(0).getFirstChild().getNodeValue() + "10^" + root.getElementsByTagName("massExponent").item(0).getFirstChild().getNodeValue();
+                }
+
+                //check if volume exists
+                String checkVol= body.getElementsByTagName("vol").item(0).getFirstChild().getNodeValue();
+                if (!(checkVol==null)) {
+                    vol ="null";
+                }else{
+                    vol = "" + body.getElementsByTagName("volValue").item(0).getFirstChild().getNodeValue() + "10^" + root.getElementsByTagName("volExponent").item(0).getFirstChild().getNodeValue();
+                }
+                float density = Float.parseFloat(body.getElementsByTagName("density").item(0).getFirstChild().getNodeValue());
+                float gravity = Float.parseFloat(body.getElementsByTagName("gravity").item(0).getFirstChild().getNodeValue());
+                float orbitPeriod = Float.parseFloat(body.getElementsByTagName("sideralOrbit").item(0).getFirstChild().getNodeValue());
+                String checkMoon = body.getElementsByTagName("moons").item(0).getFirstChild().getNodeValue();
+
+                if (checkMoon == null) {
                     moons = new HashMap<>();
-                    NodeList moonList = root.getElementsByTagName("moon");
-                    NodeList urlList = root.getElementsByTagName("rel");
+                    NodeList moonList = body.getElementsByTagName("moon");
+                    NodeList urlList = body.getElementsByTagName("rel");
 
                     for (int j = 0; j < moonList.getLength(); j++) {
                         String moonName = moonList.item(j).getFirstChild().getNodeValue();
@@ -236,7 +253,6 @@ public class RequestHandler {
 
                 xmlResponse.append(newBody.toXml()).append("\n");
             }
-            //System.out.println(newBody.toXml());
             xmlResponse.append("</bodies>");
 
         } catch (IOException e) {

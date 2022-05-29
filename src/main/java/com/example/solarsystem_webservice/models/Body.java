@@ -34,7 +34,7 @@ public class Body {
         this.gravity = gravity;
         this.bodyType = bodyType;
         this.orbitPeriod = orbitPeriod;
-        this.moons=null;
+        this.moons = null;
     }
 
     public String getName() {
@@ -93,7 +93,12 @@ public class Body {
                 "<bodyType>" + bodyType + "</bodyType>\n" +
                 "<orbitPeriod>" + orbitPeriod + "</orbitPeriod>\n";
 
-        if (!(moons == null)) {
+        if (moons == null) {
+
+            return result + "<moons>null</moons>\n</body>";
+
+        } else {
+
             StringBuilder moonsUrlList = new StringBuilder("<moons>\n");
             for (Map.Entry<String, String> entry : moons.entrySet()) {
                 moonsUrlList.append("<moonUrl name=\"").append(entry.getKey()).append("\">").append(entry.getValue()).append("</moonUrl>\n");
@@ -102,8 +107,7 @@ public class Body {
             moonsUrlList.append("</moons>\n</body>");
 
             return result + moonsUrlList.toString();
-        } else {
-            return result + "<moons>null</moons>\n</body>";
+
         }
     }
 }
